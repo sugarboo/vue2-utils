@@ -62,16 +62,28 @@ export const constantRoutes = [
     meta: { title: 'Form', icon: 'form' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form' }
-      },
-      {
         path: 'basic',
-        name: 'Basic',
+        name: 'BasicForm',
         component: () => import('@/views/form/basic'),
         meta: { title: 'Basic Form' }
+      },
+      {
+        path: 'datePicker',
+        name: 'DatePicker',
+        component: () => import('@/views/form/datePicker'),
+        meta: { title: 'Date Picker' }
+      },
+      {
+        path: 'dateTimePicker',
+        name: 'DateTimePicker',
+        component: () => import('@/views/form/dateTimePicker'),
+        meta: { title: 'Date Time Picker' }
+      },
+      {
+        path: 'verificationCode',
+        name: 'VerificationCode',
+        component: () => import('@/views/form/verificationCode'),
+        meta: { title: 'Verification Code' }
       }
     ]
   },

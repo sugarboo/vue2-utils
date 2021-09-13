@@ -1,49 +1,49 @@
 <template>
   <div class="app-container">
-    <div class="basic-form-container">
+    <div class="form-container">
       <el-form
-        ref="basicForm"
-        :model="basicForm"
-        :rules="basicFormRules"
+        ref="form"
+        :model="form"
+        :rules="formRules"
         label-width="auto"
         :status-icon="true"
       >
         <el-form-item label="姓名：" prop="name">
-          <el-input v-model="basicForm.name" placeholder="请输入姓名" />
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="地址：" prop="address">
-          <el-input v-model="basicForm.address" placeholder="请输入地址" />
+          <el-input v-model="form.address" placeholder="请输入地址" />
         </el-form-item>
         <el-form-item label="手机号：" prop="phoneNumber">
-          <el-input v-model="basicForm.phoneNumber" placeholder="请输入11位有效手机号" />
+          <el-input v-model="form.phoneNumber" placeholder="请输入11位有效手机号" />
         </el-form-item>
         <el-form-item label="邮箱：" prop="email">
-          <el-input v-model="basicForm.email" placeholder="请输入邮箱" />
+          <el-input v-model="form.email" placeholder="请输入邮箱" />
         </el-form-item>
-        <el-form-item label="单日期：" prop="singleTime">
+        <el-form-item label="单日期：" prop="singleDate">
           <el-date-picker
-            v-model="basicForm.singleTime"
+            v-model="form.singleDate"
             style="width: 100%;"
             type="date"
             placeholder="请选择日期"
             value-format="yyyy-MM-dd HH:mm:ss"
-            :picker-options="singleTimePickerOptions"
+            :picker-options="singleDatePickerOptions"
           />
         </el-form-item>
-        <el-form-item label="日期范围：" prop="codeTimeRange">
+        <el-form-item label="日期范围：" prop="dateRange">
           <el-date-picker
-            v-model="basicForm.codeTimeRange"
+            v-model="form.dateRange"
             style="width: 100%;"
-            type="datetimerange"
+            type="daterange"
             placeholder="请选择日期范围"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd HH:mm:ss"
-            :picker-options="codeTimeRangePickerOptions"
+            :picker-options="dateRangePickerOptions"
           />
         </el-form-item>
         <el-form-item label="验证码：" prop="code">
           <div class="code-area">
-            <el-input v-model="basicForm.code" placeholder="请输入验证码" />
+            <el-input v-model="form.code" placeholder="请输入验证码" />
             <el-button type="primary" :disabled="!codeFlag" @click="handleSendCode()" v-html="getCodeText" />
           </div>
         </el-form-item>
@@ -61,16 +61,22 @@
 
 <script>
 export default {
-  name: 'FormBasic',
+  name: 'BasicForm',
   data() {
     return {
-      basicForm: {
+      /* 存储表单数据 */
+      form: {
         name: '',
         address: '',
         phoneNumber: '',
-        email: ''
+        email: '',
+        singleDate: '',
+        dateRange: [],
+        code: ''
       },
-      basicFormRules: {
+
+      /* 表单验证规则 */
+      formRules: {
         name: { required: true, message: '请输入姓名', trigger: 'blur' },
         address: { required: true, message: '请输入地址', trigger: 'blur' },
         phoneNumber: [
@@ -81,20 +87,22 @@ export default {
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '请输入正确的邮箱格式', trigger: 'blur' }
         ],
-        singleTime: { required: true, message: '请选择日期', trigger: 'blur' },
-        codeTimeRange: { required: true, message: '请选择日期范围', trigger: 'blur' },
+        singleDate: { required: true, message: '请选择日期', trigger: 'blur' },
+        dateRange: { required: true, message: '请选择日期范围', trigger: 'blur' },
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { pattern: /^\d{6}$/, message: '验证码应为6位数字', trigger: 'blur' }
         ]
       },
-      singleTimePickerOptions: {
-        // 发货时间限制, 只能选择今天或之后的时间
+
+      /* 日期选择器选项 */
+      singleDatePickerOptions: {
+        /* 只能选择今天或之后的时间 */
         disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7
+          return time.getTime() < Date.now() - 1000 * 60 * 60 * 24
         }
       },
-      codeTimeRangePickerOptions: {
+      dateRangePickerOptions: {
         shortcuts: [
           {
             text: '最近一周',
@@ -133,6 +141,7 @@ export default {
     }
   },
   computed: {
+    // 获取验证码按钮内的HTML内容
     getCodeText() {
       if (!this.codeRetrySeconds || this.codeRetrySeconds === 0) {
         return '<span>获取验证码</span>'
@@ -144,25 +153,26 @@ export default {
   methods: {
     /* 表单提交按钮的点击事件处理 */
     handleSubmit() {
-      this.$refs['basicForm'].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
-          console.log('basic form -> handle submit', this.basicForm)
+          console.log('form -> handle submit', this.form)
           this.$notify.success({
             title: '成功',
             message: '表单提交成功'
           })
+          this.$refs['form'].resetFields()
         }
         return
       })
     },
     /* 表单重置按钮的点击事件处理 */
     handleReset() {
-      console.log('basic form -> handle reset')
-      this.$refs['basicForm'].resetFields()
+      console.log('form -> handle reset')
+      this.$refs['form'].resetFields()
     },
     /* 表单取消按钮的点击事件处理 */
     handleCancel() {
-      console.log('basic form -> handle cancel')
+      console.log('form -> handle cancel')
       this.$router.go(-1)
     },
 
@@ -207,7 +217,7 @@ export default {
 
 <style lang="scss" scoped>
 .app-container {
-  .basic-form-container {
+  .form-container {
     width: 66%;
     margin: 0 auto;
     .code-area {
@@ -233,5 +243,4 @@ export default {
     // }
   }
 }
-
 </style>
