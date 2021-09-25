@@ -179,7 +179,7 @@ export default {
 
     /* 表单提交按钮的点击事件处理 */
     handleSubmit() {
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid, errObj) => {
         if (valid) {
           this.form.dateTime = this.form.date + ' ' + this.form.time + ':00'
           // 删除无用的参数
@@ -191,6 +191,21 @@ export default {
             message: '表单提交成功'
           })
           this.$refs['form'].resetFields()
+        } else {
+          let errMsg = ''
+          for (const key in errObj) {
+            if (Object.hasOwnProperty.call(errObj, key)) {
+              const element = errObj[key]
+              element.forEach(element => {
+                errMsg += `${element.message}；`
+              })
+            }
+          }
+          this.$notify.error({
+            title: '错误',
+            message: errMsg
+          })
+          return
         }
       })
     },

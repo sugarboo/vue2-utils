@@ -32,7 +32,9 @@ export default {
   data() {
     return {
       /* 表单 */
-      form: {},
+      form: {
+        code: ''
+      },
       formRules: {
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -94,15 +96,29 @@ export default {
 
     /* 表单提交按钮的点击事件处理 */
     handleSubmit() {
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid, errObj) => {
         if (valid) {
           console.log('form -> handle submit', this.form)
           this.$notify.success({
             title: '成功',
             message: '表单提交成功'
           })
+        } else {
+          let errMsg = ''
+          for (const key in errObj) {
+            if (Object.hasOwnProperty.call(errObj, key)) {
+              const element = errObj[key]
+              element.forEach(element => {
+                errMsg += `${element.message}；`
+              })
+            }
+          }
+          this.$notify.error({
+            title: '错误',
+            message: errMsg
+          })
+          return
         }
-        return
       })
     },
 

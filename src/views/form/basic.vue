@@ -14,6 +14,9 @@
         <el-form-item label="地址：" prop="address">
           <el-input v-model="form.address" placeholder="请输入地址" />
         </el-form-item>
+        <el-form-item label="身份证：" prop="idCardNumber">
+          <el-input v-model="form.idCardNumber" placeholder="请输入身份证号" />
+        </el-form-item>
         <el-form-item label="手机号：" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" placeholder="请输入11位有效手机号" />
         </el-form-item>
@@ -68,6 +71,7 @@ export default {
       form: {
         name: '',
         address: '',
+        idCardNumber: '',
         phoneNumber: '',
         email: '',
         singleDate: '',
@@ -79,6 +83,10 @@ export default {
       formRules: {
         name: { required: true, message: '请输入姓名', trigger: 'blur' },
         address: { required: true, message: '请输入地址', trigger: 'blur' },
+        idCardNumber: [
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { pattern: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/, message: '请输入正确的身份证号格式', trigger: 'blur' }
+        ],
         phoneNumber: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^1[3|5|7|8|9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' }
@@ -153,16 +161,30 @@ export default {
   methods: {
     /* 表单提交按钮的点击事件处理 */
     handleSubmit() {
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid, errObj) => {
         if (valid) {
           console.log('form -> handle submit', this.form)
           this.$notify.success({
             title: '成功',
             message: '表单提交成功'
           })
-          this.$refs['form'].resetFields()
+          // this.$refs['form'].resetFields()
+        } else {
+          let errMsg = ''
+          for (const key in errObj) {
+            if (Object.hasOwnProperty.call(errObj, key)) {
+              const element = errObj[key]
+              element.forEach(element => {
+                errMsg += `${element.message}；`
+              })
+            }
+          }
+          this.$notify.error({
+            title: '错误',
+            message: errMsg
+          })
+          return
         }
-        return
       })
     },
     /* 表单重置按钮的点击事件处理 */
