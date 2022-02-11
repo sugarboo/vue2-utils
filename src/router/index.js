@@ -69,21 +69,36 @@ export const constantRoutes = [
       },
       {
         path: 'datePicker',
-        name: 'DatePicker',
+        name: 'DatePickerForm',
         component: () => import('@/views/form/datePicker'),
         meta: { title: 'Date Picker' }
       },
       {
         path: 'dateTimePicker',
-        name: 'DateTimePicker',
+        name: 'DateTimePickerForm',
         component: () => import('@/views/form/dateTimePicker'),
         meta: { title: 'Date Time Picker' }
       },
       {
         path: 'verificationCode',
-        name: 'VerificationCode',
+        name: 'VerificationCodeForm',
         component: () => import('@/views/form/verificationCode'),
         meta: { title: 'Verification Code' }
+      }
+    ]
+  },
+
+  {
+    path: '/table',
+    component: Layout,
+    redirect: '/table/index',
+    meta: { title: 'Table', icon: 'table' },
+    children: [
+      {
+        path: 'span',
+        name: 'SpanTable',
+        component: () => import('@/views/table/span'),
+        meta: { title: 'Span' }
       }
     ]
   },

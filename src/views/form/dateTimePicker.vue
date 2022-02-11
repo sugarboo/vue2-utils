@@ -73,7 +73,7 @@
 
 <script>
 export default {
-  name: 'DateTimePicker',
+  name: 'DateTimePickerForm',
   data() {
     return {
       /* 表单 */

@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  name: 'VerificationCode',
+  name: 'VerificationCodeForm',
   data() {
     return {
       /* 表单 */

@@ -70,7 +70,7 @@
 
 <script>
 export default {
-  name: 'DatePicker',
+  name: 'DatePickerForm',
   data() {
     return {
       /* 表单 */
